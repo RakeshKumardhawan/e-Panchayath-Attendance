@@ -57,7 +57,7 @@ app.get('/api/report', async (req, res) => {
 
     const resp = await axios.get(externalUrl, {
       params: { Parameter1: param },
-      timeout: 20000,
+      timeout: 60000, // 60 seconds,
       headers: { 'User-Agent': 'Mozilla/5.0 (compatible; e-Panchayath/1.0)' },
       responseType: 'text'
     });
