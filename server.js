@@ -9,14 +9,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// very first log so we can see startup in Render logs
 console.log('Starting e-Panchayath backend...');
 
 app.get('/', (req, res) => {
   res.send('e-Panchayath backend running ✅');
 });
 
-// Sample API expecting uid query param (we sanitize digits only)
 app.get('/api/report', async (req, res) => {
   try {
     const uidRaw = String(req.query.uid || '').trim();
@@ -38,30 +36,24 @@ app.get('/api/report', async (req, res) => {
     });
 
     const html = resp.data || '';
-    // quick parse: try to extract table rows if any (basic)
     const $ = cheerio.load(html);
     const tables = $('table');
     const parsed = [];
 
     if (tables.length > 0) {
       const t = tables.first();
-      // get headers
       const headers = [];
-      t.find('tr').first().find('th,td').each((i, el) => {
-        headers.push($(el).text().trim().replace(/\s+/g, ' '));
-      });
+      t.find('tr').first().find('th,td').each((i, el) => headers.push($(el).text().trim().replace(/\s+/g, ' ')));
       t.find('tr').slice(1).each((i, tr) => {
         const row = {};
         $(tr).find('td').each((j, td) => {
           const key = headers[j] || `col${j}`;
           row[key] = $(td).text().trim();
         });
-        // only push non-empty rows
         if (Object.values(row).some(v => v)) parsed.push(row);
       });
     }
 
-    // return JSON with raw html length and parsed rows (if any)
     return res.json({
       uid: numericId,
       external_url: `${externalUrl}?Parameter1=${param}`,
