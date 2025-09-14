@@ -1,9 +1,9 @@
-// server.js - minimal express server suitable for Render
+// server.js - cleaned & minimal, ready for Render
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const axios = require('axios');
-const cheerio = require('cheerio');
+const axios = require('axios');      // make sure axios is in package.json deps
+const cheerio = require('cheerio');  // make sure cheerio is in package.json deps
 
 const app = express();
 app.use(cors());
@@ -11,10 +11,18 @@ app.use(express.json());
 
 console.log('Starting e-Panchayath backend...');
 
+// Root health-check
 app.get('/', (req, res) => {
-  res.send('e-Panchayath backend running ✅');
+  res.send('✅ e-Panchayath Attendance Backend Running...');
 });
 
+// SIMPLE mock or quick test route (optional)
+// You can keep it for quick checks:
+app.get('/api/test', (req, res) => {
+  res.json({ ok: true, time: new Date() });
+});
+
+// SINGLE /api/report route - numeric uid sanitized and TG-site proxy fetch
 app.get('/api/report', async (req, res) => {
   try {
     const uidRaw = String(req.query.uid || '').trim();
@@ -43,7 +51,9 @@ app.get('/api/report', async (req, res) => {
     if (tables.length > 0) {
       const t = tables.first();
       const headers = [];
-      t.find('tr').first().find('th,td').each((i, el) => headers.push($(el).text().trim().replace(/\s+/g, ' ')));
+      t.find('tr').first().find('th,td').each((i, el) => {
+        headers.push($(el).text().trim().replace(/\s+/g, ' '));
+      });
       t.find('tr').slice(1).each((i, tr) => {
         const row = {};
         $(tr).find('td').each((j, td) => {
@@ -63,7 +73,7 @@ app.get('/api/report', async (req, res) => {
     });
 
   } catch (err) {
-    console.error('Error in /api/report:', err.message || err, err.response && err.response.status);
+    console.error('Error in /api/report:', err && err.message ? err.message : err);
     if (err.response && err.response.data) {
       return res.status(err.response.status || 500).json({ error: 'External site error', details: String(err.response.data).slice(0,400) });
     }
@@ -71,6 +81,7 @@ app.get('/api/report', async (req, res) => {
   }
 });
 
+// Listen once, using Render's PORT
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
