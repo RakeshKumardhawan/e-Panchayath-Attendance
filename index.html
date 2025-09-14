@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-Panchayathi Panchayat Secretary Attendance</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .hidden { display: none; }
+    .container { max-width: 800px; margin: auto; }
+    label { display: block; margin-top: 10px; }
+    input, select, button { width: 100%; padding: 8px; margin-top: 5px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f4f4f4; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>e-Panchayathi Panchayat Secretary Attendance</h1>
+  
+  <div>
+    <label>Select Mode</label>
+    <select id="modeSelect">
+      <option value="userIdMode">Use User ID</option>
+      <option value="districtMandalMode">Use District & Mandal</option>
+    </select>
+  </div>
+
+  <!-- User ID Mode -->
+  <div id="userIdMode">
+    <label>User ID:</label>
+    <input type="text" id="userIdInput" placeholder="Enter User ID (e.g., DPO123)" />
+    <button onclick="fetchByUserId()">Fetch by User ID</button>
+  </div>
+
+  <!-- District & Mandal Mode -->
+  <div id="districtMandalMode" class="hidden">
+    <label>District:</label>
+    <select id="districtSelect">
+      <!-- Options for districts -->
+      <option value="Mancherial">Mancherial</option>
+      <!-- Add all other districts similarly -->
+    </select>
+
+    <label>Mandal:</label>
+    <select id="mandalSelect">
+      <option value="">Select District First</option>
+    </select>
+
+    <button onclick="fetchByDistrictMandal()">Fetch by District &
+[media pointer="sediment://file_00000000539861f6b8b8d8a5e832eca0"]
